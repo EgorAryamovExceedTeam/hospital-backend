@@ -51,7 +51,9 @@ module.exports.logInUser = (req, res) => {
     User.findOne({ login: req.body.login }).then((candidate) => {
       if (!candidate) {
         // if login absend in DB send 404 error
-        res.status(404).send("Has no users whith this login, try another");
+        res
+          .status(404)
+          .send({ message: "Has no users whith this login, try another" });
       } else {
         const passwordResult = bcryptjs.compareSync(
           body.password,
@@ -70,7 +72,7 @@ module.exports.logInUser = (req, res) => {
           res.send({ data: `Bearer ${token}` });
           // passwords not consided, send 401 error
         } else {
-          res.status(401).send("Passwords not conside, try again");
+          res.status(401).send({ message: "Passwords not conside, try again" });
         }
       }
     });
