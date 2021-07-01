@@ -1,10 +1,11 @@
 const Note = require("../../db/models/notes/note");
+const User = require("../../db/models/users/user");
 const errorHandler = require("../../utils/errorHandler");
 
 // get all notes
 module.exports.getAllNotes = (req, res) => {
   try {
-    Note.find().then((result) => {
+    Note.find({ login: req.user.login }).then((result) => {
       res.send({ data: result });
     });
   } catch (e) {
@@ -28,9 +29,10 @@ module.exports.createNewNote = (req, res) => {
         doctor: doctor,
         date: date,
         complaint: complaint,
+        login: req.user.login,
       });
       note.save().then(() => {
-        Note.find().then((result) => {
+        Note.find({ login: req.user.login }).then((result) => {
           res.send({ data: result });
         });
       });
@@ -48,7 +50,7 @@ module.exports.createNewNote = (req, res) => {
 
 // change note's info
 module.exports.updateNote = (req, res) => {
-  const { _id, name, doctor, date, complaint } = req.body;
+  const { _id, name, doctor, date, complaint, login } = req.body;
   const body = req.body;
   if (
     // request necessary fields?
@@ -60,7 +62,7 @@ module.exports.updateNote = (req, res) => {
   ) {
     try {
       Note.updateOne({ _id: body._id }, body).then(() => {
-        Note.find().then((result) => {
+        Note.find({ login: login }).then((result) => {
           res.send({ data: result });
         });
       });
@@ -80,7 +82,7 @@ module.exports.updateNote = (req, res) => {
 module.exports.deleteNote = (req, res) => {
   try {
     Note.deleteOne({ _id: req.query._id }).then(() => {
-      Note.find().then((result) => {
+      Note.find({ login: req.user.login }).then((result) => {
         res.send({ data: result });
       });
     });

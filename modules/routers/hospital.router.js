@@ -1,5 +1,5 @@
 const express = require("express");
-const passport = require("passport");
+const auth = require("../../middleware/auth.middleware");
 const router = express.Router();
 
 const {
@@ -9,21 +9,9 @@ const {
   deleteNote,
 } = require("../controllers/hospital.controller");
 
-router.get("/", passport.authenticate("jwt", { session: false }), getAllNotes);
-router.post(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  createNewNote
-);
-router.patch(
-  "/updateInfo",
-  passport.authenticate("jwt", { session: false }),
-  updateNote
-);
-router.delete(
-  "/deleteNote",
-  passport.authenticate("jwt", { session: false }),
-  deleteNote
-);
+router.get("/", auth, getAllNotes);
+router.post("/addNewNote", auth, createNewNote);
+router.patch("/updateInfo", auth, updateNote);
+router.delete("/deleteNote", auth, deleteNote);
 
 module.exports = router;

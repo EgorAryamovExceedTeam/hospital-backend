@@ -6,6 +6,7 @@ const noteSchema = new Schema({
   doctor: String,
   date: String,
   complaint: String,
+  login: String,
 });
 
 module.exports = Note = mongoose.model("appointment", noteSchema);
