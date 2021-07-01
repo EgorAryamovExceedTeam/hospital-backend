@@ -2,12 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+
 const morgan = require("morgan");
-const apiRoutes = require("./modules/routers/auth.router");
+const apiAuthRoutes = require("./modules/routers/auth.router");
+const apiHospRoutes = require("./modules/routers/hospital.router");
 const app = express();
 
 dotenv.config();
-
+app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 
@@ -19,9 +21,8 @@ mongoose.connect(uri, {
   useUnifiedTopology: true,
 });
 
-app.use(cors());
-
-app.use("/", apiRoutes);
+app.use("/", apiAuthRoutes);
+app.use("/", apiHospRoutes);
 
 app.listen(8000, () => {
   console.log("Server has been started on PORT: 8000...");
